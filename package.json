@@ -1,0 +1,102 @@
+{
+  "name": "pwa-starter",
+  "version": "0.0.1",
+  "description": "PWA Starter with Preact",
+  "main": "server/index.js",
+  "heroku-run-build-script": true,
+  "scripts": {
+    "preinstall": "if test -z \"$NODE_ENV\"; then rm .git/hooks/pre-commit; cp pre-commit.sh .git/hooks/pre-commit; else rm -rf public; mkdir public; fi",
+    "start": "if test -z \"$NODE_ENV\"; then npm run dev; else npm run browse; fi",
+    "dev": "npm-run-all --parallel build:dev watch-assets",
+    "prebuild:dev": "npm run lint --silent",
+    "build:dev": "rollup -c config/dev.js -w",
+    "watch-assets": "sane 'npm run prelint' src/assets",
+    "browse": "node server/index.js",
+    "prebuild": "npm run test",
+    "build": "rollup -c config/prod.js",
+    "postbuild": "react-snap",
+    "prelint": "rm -rf public; mkdir public; cp -r src/assets/* public/; cp -r src/assets/* public/",
+    "lint": "standard --verbose --parser babel-eslint | snazzy",
+    "pretest": "npm run lint",
+    "test": "exit 0",
+    "docs": "cd src/ && docco {**,.,**/**,**/**/**}/*.js --output ../docs --layout parallel",
+    "postdocs": "surge --d pwa-starter.surge.sh -p docs/"
+  },
+  "lint-staged": {
+    "*.js": [
+      "standard --verbose --parser babel-eslint",
+      "git add"
+    ]
+  },
+  "standard": {
+    "ignore": [
+      "server/bundle.js"
+    ]
+  },
+  "reactSnap": {
+    "source": "public",
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ]
+  },
+  "keywords": [],
+  "author": "Adrian Unger",
+  "license": "MIT",
+  "dependencies": {
+    "@app-elements/avatar": "1.1.1",
+    "@app-elements/carousel": "1.2.3",
+    "@app-elements/date-picker": "0.2.0",
+    "@app-elements/dropdown": "3.0.1",
+    "@app-elements/form": "2.2.1",
+    "@app-elements/helmet": "2.1.0",
+    "@app-elements/image": "1.1.5",
+    "@app-elements/list-resource": "2.1.5",
+    "@app-elements/loading-indicator": "1.1.0",
+    "@app-elements/modal": "3.1.0",
+    "@app-elements/notification": "2.0.0",
+    "@app-elements/router": "2.5.0",
+    "@app-elements/tooltip": "2.0.0",
+    "@app-elements/use-mapped-state": "0.3.2",
+    "@app-elements/use-request": "1.6.0",
+    "@wasmuth/path-reducer": "0.1.6",
+    "atom": "1.4.1",
+    "compression": "1.7.4",
+    "polka": "0.5.2",
+    "preact": "10.3.4",
+    "prop-types": "15.7.2",
+    "sirv": "0.4.2",
+    "wasmuth": "2.0.6"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.3",
+    "babel-eslint": "10.1.0",
+    "babel-plugin-external-helpers": "6.22.0",
+    "babel-plugin-jsx-import": "github:staydecent/babel-plugin-jsx-import",
+    "babel-plugin-module-resolver": "3.2.0",
+    "babel-plugin-syntax-dynamic-import": "6.18.0",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-plugin-transform-es2015-spread": "6.22.0",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-preset-env": "1.7.0",
+    "babel-preset-react": "6.24",
+    "docco": "0.8.0",
+    "less": "3.11.1",
+    "lint-staged": "9.4.2",
+    "npm-run-all": "4.1.5",
+    "react-snap": "1.23.0",
+    "rollup": "1.19.4",
+    "rollup-plugin-alias": "1.5.2",
+    "rollup-plugin-babel": "3.0.7",
+    "rollup-plugin-babel-minify": "9.1.0",
+    "rollup-plugin-browsersync": "1.0.0",
+    "rollup-plugin-commonjs": "10.1.0",
+    "rollup-plugin-css-only": "1.0.0",
+    "rollup-plugin-node-globals": "1.4.0",
+    "rollup-plugin-node-resolve": "5.2.0",
+    "rollup-plugin-replace": "2.2.0",
+    "sane": "4.1.0",
+    "snazzy": "8.0.0",
+    "standard": "13.1.0"
+  }
+}
